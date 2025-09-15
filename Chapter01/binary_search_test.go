@@ -4,11 +4,7 @@ import (
 	"testing"
 )
 
-// TestBinarySearch covers various scenarios for the BinarySearch function.
 func TestBinarySearch(t *testing.T) {
-	// A slice of structs to define our test cases.
-	// Each struct contains the test name, input array (haystack),
-	// the value to find (needle), and the expected result (index or -1).
 	testCases := []struct {
 		name     string
 		haystack []int
@@ -72,12 +68,9 @@ func TestBinarySearch(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		// Use t.Run to create subtests for better test output and isolation.
 		t.Run(tc.name, func(t *testing.T) {
-			// Call the BinarySearch function with the test case data.
 			got := BinarySearch(tc.needle, tc.haystack)
 
-			// Check if the returned value (got) matches the expected value (want).
 			if got != tc.want {
 				t.Errorf("BinarySearch(%d, %v) = %d; want %d", tc.needle, tc.haystack, got, tc.want)
 			}
