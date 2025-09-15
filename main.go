@@ -16,6 +16,6 @@ func main() {
 	}
 
 	var selectionSortArray = []uint8{10, 8, 6, 4, 3, 2, 1, 5, 7, 9}
-	var newSlice = Chapter02.SelectionSort(selectionSortArray)
+	var newSlice = Chapter02.SelectionSortV1(selectionSortArray)
 	fmt.Println(newSlice)
 }

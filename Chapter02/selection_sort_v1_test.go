@@ -50,7 +50,7 @@ func TestV1SelectionSort(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got := SelectionSort(testCase.haystack)
+			got := SelectionSortV1(testCase.haystack)
 
 			if !reflect.DeepEqual(got, testCase.want) {
 				t.Errorf("For haystack %v, want %v, but got %v", testCase.haystack, testCase.want, got)

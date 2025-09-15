@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-func findMinimumIndex(slice []uint8) (uint8, error) {
+func findMinimumIndexV1(slice []uint8) (uint8, error) {
 
 	if len(slice) == 0 {
 		return 0, errors.New("slice can not be empty")
@@ -21,7 +21,7 @@ func findMinimumIndex(slice []uint8) (uint8, error) {
 	return minimumIndex, nil
 }
 
-func popMinimumIndex(index uint8, slice []uint8) (uint8, []uint8, error) {
+func popMinimumIndexV1(index uint8, slice []uint8) (uint8, []uint8, error) {
 
 	if index < 0 || index >= uint8(len(slice)) {
 		return 0, nil, errors.New("index out of bounds")
@@ -35,7 +35,7 @@ func popMinimumIndex(index uint8, slice []uint8) (uint8, []uint8, error) {
 	return poppedValue, newSlice, nil
 }
 
-func SelectionSort(slice []uint8) []uint8 {
+func SelectionSortV1(slice []uint8) []uint8 {
 	if len(slice) < 2 {
 		return slice
 	}
@@ -45,12 +45,12 @@ func SelectionSort(slice []uint8) []uint8 {
 	loops := len(slice)
 
 	for i := 0; i < loops; i++ {
-		minIndex, err := findMinimumIndex(slice)
+		minIndex, err := findMinimumIndexV1(slice)
 		if err != nil {
 			panic(err)
 		}
 
-		minValue, slice, err = popMinimumIndex(minIndex, slice)
+		minValue, slice, err = popMinimumIndexV1(minIndex, slice)
 		if err != nil {
 			panic(err)
 		}
