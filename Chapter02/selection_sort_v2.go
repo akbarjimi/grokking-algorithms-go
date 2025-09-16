@@ -26,23 +26,23 @@ func SelectionSortV2(slice []int) []int {
 		return slice
 	}
 
-	var newSlice []int
-	var minValue int
-	loops := len(slice)
+	var temp int
+	loops := len(slice) - 1
 
 	for i := 0; i < loops; i++ {
-		minIndex, err := findMinimumIndexV2(slice, 0)
+		minIndex, err := findMinimumIndexV2(slice, i)
 		if err != nil {
 			panic(err)
 		}
 
-		minValue, slice, err = popMinimumIndexV2(minIndex, slice)
-		if err != nil {
-			panic(err)
+		if i == minIndex {
+			continue
 		}
 
-		newSlice = append(newSlice, minValue)
+		temp = slice[i]
+		slice[i] = slice[minIndex]
+		slice[minIndex] = temp
 	}
 
-	return newSlice
+	return slice
 }
