@@ -49,12 +49,21 @@ func (h *HashMap[K, V]) Get(key K) (V, bool) {
 
 func (h *HashMap[K, V]) Delete(key K) bool {
 	bucketIndex := h.hashKey(key)
-	currentHead := h.buckets[bucketIndex]
+	currentEntry := h.buckets[bucketIndex]
+	var previousEntry *entry[K, V]
 
-	if currentHead != nil && currentHead.key == key {
-		h.buckets[bucketIndex] = nil
-		h.count--
-		return true
+	for currentEntry != nil {
+		if currentEntry.key == key {
+			if previousEntry != nil {
+				previousEntry.next = currentEntry.next
+			} else {
+				h.buckets[bucketIndex] = currentEntry.next
+			}
+			h.count--
+			return true
+		}
+		previousEntry = currentEntry
+		currentEntry = currentEntry.next
 	}
 
 	return false
