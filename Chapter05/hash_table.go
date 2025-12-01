@@ -27,10 +27,16 @@ func NewHashMap[K comparable, V any](capacity int) *HashMap[K, V] {
 }
 
 func (h *HashMap[K, V]) Put(key K, value V) {
+	foundEntry, ok := h.findKey(key)
+	if ok {
+		foundEntry.value = value
+		return
+	}
 	bucketIndex := h.hashKey(key)
 	newEntry := &entry[K, V]{key: key, value: value, next: h.buckets[bucketIndex]}
 	h.buckets[bucketIndex] = newEntry
 	h.count++
+	return
 }
 
 func (h *HashMap[K, V]) Get(key K) (V, bool) {
