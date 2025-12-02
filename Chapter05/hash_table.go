@@ -32,6 +32,10 @@ func (h *HashMap[K, V]) Put(key K, value V) {
 		foundEntry.value = value
 		return
 	}
+	if float64(h.count)/float64(h.capacity) >= loadFactor {
+		h.resize()
+	}
+
 	bucketIndex := h.hashKey(key)
 	newEntry := &entry[K, V]{key: key, value: value, next: h.buckets[bucketIndex]}
 	h.buckets[bucketIndex] = newEntry
@@ -92,4 +96,20 @@ func (h *HashMap[K, V]) findKey(key K) (*entry[K, V], bool) {
 		currentEntry = currentEntry.next
 	}
 	return nil, false
+}
+
+func (h *HashMap[K, V]) resize() {
+	biggerHashMap := NewHashMap[K, V](h.capacity * 2)
+
+	for i := 0; i < h.capacity; i++ {
+		currentEntry := h.buckets[i]
+		for currentEntry != nil {
+			biggerHashMap.Put(currentEntry.key, currentEntry.value)
+			currentEntry = currentEntry.next
+		}
+	}
+
+	h.capacity = biggerHashMap.capacity
+	h.buckets = biggerHashMap.buckets
+	h.count = biggerHashMap.count
 }

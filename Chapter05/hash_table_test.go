@@ -100,3 +100,42 @@ func TestHashMap_Delete(t *testing.T) {
 		})
 	}
 }
+
+func TestHashMap_Resize(t *testing.T) {
+	t.Parallel()
+
+	m := NewHashMap[string, int](4)
+
+	m.Put("k1", 10)
+	m.Put("k2", 20)
+	m.Put("k3", 30)
+
+	if m.capacity != 4 {
+		t.Fatalf("Capacity should be 4 before resize, got %d", m.capacity)
+	}
+
+	m.Put("k4", 40)
+
+	if m.capacity != 8 {
+		t.Errorf("Capacity failed to resize: got %d, want 8", m.capacity)
+	}
+	if m.count != 4 {
+		t.Errorf("Count is incorrect after resize: got %d, want 4", m.count)
+	}
+
+	keys := map[string]int{"k1": 10, "k2": 20, "k3": 30, "k4": 40}
+	for k, expectedV := range keys {
+		gotV, ok := m.Get(k)
+		if !ok || gotV != expectedV {
+			t.Errorf("Resize failed to retain key %q. Got %v, want %v", k, gotV, expectedV)
+		}
+	}
+
+	m.Put("k5", 50)
+	if m.count != 5 {
+		t.Errorf("Insertion after resize failed, count is %d", m.count)
+	}
+	if _, ok := m.Get("k5"); !ok {
+		t.Errorf("Failed to retrieve key inserted after resize")
+	}
+}
