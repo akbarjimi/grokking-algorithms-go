@@ -1,65 +1,93 @@
-package Chapter06
+package chapter06
 
 import (
 	"testing"
 )
 
-func TestBreadthFirstSearch_path(t *testing.T) {
-	graph := make(map[string][]string)
-	graph["A"] = []string{"B", "C"}
-	graph["B"] = []string{"D"}
-	graph["C"] = []string{"E"}
-	graph["D"] = []string{"E"}
-	graph["E"] = []string{}
+func TestBreadthFirstSearch(t *testing.T) {
+	tests := []struct {
+		name     string
+		graph    map[string][]string
+		start    string
+		needle   string
+		expected bool
+	}{
+		{
+			name: "path exists with multiple branches",
+			graph: map[string][]string{
+				"A": {"B", "C"},
+				"B": {"D"},
+				"C": {"E"},
+				"D": {"E"},
+				"E": {},
+			},
+			start:    "A",
+			needle:   "E",
+			expected: true,
+		}, {
+			name: "no path exists",
+			graph: map[string][]string{
+				"A": {"B", "C"},
+				"B": {"D"},
+				"C": {"E"},
+				"D": {"E"},
+				"E": {},
+			},
+			start:    "A",
+			needle:   "Z",
+			expected: false,
+		}, {
+			name: "single narrow path",
+			graph: map[string][]string{
+				"A": {"B", "C"},
+				"B": {"D"},
+				"C": {},
+				"D": {"E"},
+				"E": {},
+			},
+			start:    "A",
+			needle:   "E",
+			expected: true,
+		}, {
+			name: "start equals needle",
+			graph: map[string][]string{
+				"A": {"B"},
+				"B": {"C"},
+			},
+			start:    "A",
+			needle:   "A",
+			expected: true,
+		}, {
+			name: "graph with cycle",
+			graph: map[string][]string{
+				"A": {"B"},
+				"B": {"C"},
+				"C": {"A"},
+			},
+			start:    "A",
+			needle:   "C",
+			expected: true,
+		}, {
+			name:     "empty graph",
+			graph:    map[string][]string{},
+			start:    "A",
+			needle:   "B",
+			expected: false,
+		},
+	}
 
-	start := "A"
-	needle := "E"
-	expected := true
-
-	t.Run("When there is a path", func(t *testing.T) {
-		got := BreadthFirstSearch(graph, start, needle)
-		if got != expected {
-			t.Errorf("expected %v, got %v", expected, got)
-		}
-	})
-}
-
-func TestBreadthFirstSearch_no_path(t *testing.T) {
-	graph := make(map[string][]string)
-	graph["A"] = []string{"B", "C"}
-	graph["B"] = []string{"D"}
-	graph["C"] = []string{"E"}
-	graph["D"] = []string{"E"}
-	graph["E"] = []string{}
-
-	start := "A"
-	needle := "Z"
-	expected := false
-
-	t.Run("When there is no path", func(t *testing.T) {
-		got := BreadthFirstSearch(graph, start, needle)
-		if got != expected {
-			t.Errorf("expected %v, got %v", expected, got)
-		}
-	})
-}
-
-func TestBreadthFirstSearch_just_one_path(t *testing.T) {
-	graph := make(map[string][]string)
-	graph["A"] = []string{"B", "C"}
-	graph["B"] = []string{"D"}
-	graph["C"] = []string{}
-	graph["D"] = []string{"E"}
-	graph["E"] = []string{}
-
-	start := "A"
-	needle := "E"
-	expected := true
-
-	t.Run("When there is no path", func(t *testing.T) {
-		got := BreadthFirstSearch(graph, start, needle)
-		if got != expected {
-			t.Errorf("expected %v, got %v", expected, got)
-		}
-	})
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := BreadthFirstSearch(test.graph, test.start, test.needle)
+			if got != test.expected {
+				t.Fatalf(
+					"BreadthFirstSearch(%q → %q) = %v, want %v",
+					test.start,
+					test.needle,
+					got,
+					test.expected,
+				)
+			}
+		})
+	}
 }
